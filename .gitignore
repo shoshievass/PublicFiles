@@ -1,0 +1,20 @@
+#Ignore everything.
+*
+# Don't ignore directories.
+!*/
+#Don't ignore .gitignore and don't ignore [preferred files].
+!.gitignore
+!*.jl
+!*.do
+!*.py
+!*.m
+!*.slurm
+!*.sh
+!*.r
+!*.stan
+!*.ipynb
+!*.tex
+!*.sty
+!*.txt
+.Rproj.user
+.ipynb_checkpoints
