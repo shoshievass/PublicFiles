@@ -1,0 +1,405 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Asymmetric (Two Type) Procurement Auction Equilibrium},
+  pdfauthor={S. Vasserman},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+
+\title{Asymmetric (Two Type) Procurement Auction Equilibrium}
+\author{S. Vasserman}
+\date{6/19/2020}
+
+\begin{document}
+\maketitle
+
+The goal of this note is extend the baseline model discussed in
+\href{https://scholar.harvard.edu/files/vasserman/files/bv_sept2019.pdf}{Bolotnny
+and Vasserman (2019)} to allow for two-dimensional types.
+
+We begin by defining the primitives of the model in order of importance
+for the exercise.
+
+Bidders indexed by \(i\) are described types consisting of two
+parameters: - A ``cost'' parameter: \(\alpha^i\) - This captures the
+relative cost-efficiency of bidder \(i\). - A ``risk'' parameter:
+\(\gamma^i\) - This captures the extent to which bidder \(i\) dislike
+risks.
+
+The role of \(\gamma\) is mediated by a ``utility'' function that models
+how much a bidder values a given bet. In particular, we will use:
+\[ u(\pi) = 1 - \exp(-\gamma \pi) \]
+
+To solidify what this means, suppose that a bidder faces a bet: win
+\$100 with probability 0.5 or \$0 with probability 0.5. If the bidder
+has \(\gamma = 0.01\), then the expectation of his utility for the bet
+is:
+\[ 0.5 \cdot u(100) + 0.5 \cdot u(0) = 0.5 \cdot (1 - \exp(-\frac{100}{100})) + 0.5 \cdot (1 - \exp(-\frac{0}{100}))
+\] \[ = 0.5 \cdot (1 - \exp(-1)) + 0.5 \cdot (0) \approx 0.316
+\] By contrast, if he were able to get \$50 for sure, he would value
+this at \[ u(50) = 1 - \exp(-\frac{50}{100}) \approx 0.393
+\] so you can see that the bidder ``dislikes'' risk. In general, the
+higher that \(\gamma\) is, the larger the discrepency between the value
+of a ``bet'' and a ``sure thing'' of equal expected value.
+
+The rest of the parameters in the model explain the way that a bidder of
+type \((\alpha^i, \gamma^i)\) values a given bid that he is considering
+to submit to the auction.
+
+This is described in the problem definision section just below.
+
+For each of \(t = 1, \ldots, T\) materials (items) that procurement
+project will require, there is: - \(q_t^e\): - The DOT engineer's
+estimate of the quantity of item \(t\) that will be needed for the
+project - \(q_t^b\): - The bidder's estimated quantity of item \(t\)
+that will be used - \(\sigma_t^2\) - The variance of the bidder's
+estimate of \(q_t^b\)
+
+\begin{itemize}
+\tightlist
+\item
+  \(c_t\):
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The market unit rate for item \(t\)
+  \end{itemize}
+\end{itemize}
+
+Note that I often use ``DOT'' to refer to the government org that runs
+the auction -- DOT stands for Department of Transportation.
+
+\hypertarget{the-problem-definition}{%
+\subsubsection{The Problem Definition}\label{the-problem-definition}}
+
+We will consider an auction in which there are \(2\) kinds of bidders,
+characterized by different values of \(\gamma\): \(\gamma_1\) and
+\(\gamma_2\).
+
+We are interested in solving for the ``equilibrium bidding'' function
+that maps each possible type \((\tilde{\alpha}, \gamma_i)\) to a
+``score'' \(s(\tilde{\alpha}, {\gamma}_i)\).
+
+We can think the ``score'' function as a map: \[
+s_{i} : [\underline{\alpha}, \overline{\alpha}] \times \gamma_i \rightarrow [\underline{S}, \overline{S}]
+\]
+
+where each of \([\underline{\alpha}, \overline{\alpha}]\) and
+\([\underline{S}, \overline{S}]\) are subsets of \(\mathbb{R}_{+}\).
+
+Note that each \(\gamma\)-type is going to have its own monotonic score
+function. We have two \(\gamma\) types --- \(\gamma_1\) and \(\gamma_2\)
+--- and so we will need to solve for two score functions ---
+\(s_1(\alpha)\) and \(s_2(\alpha)\).
+
+In order for a prospective ``score'' function to be an equilibrium, it
+needs maximize the ``expected utility'' from participating in the
+auction for each possible bidder type
+\((\tilde{\alpha}, \tilde{\gamma})\) --- let's call this
+\(EU(\tilde{\alpha}, \tilde{\gamma}, s(\tilde{\alpha}, \tilde{\gamma}))\).
+
+This is the product of the (expected) utility that the bidder would get
+from completing the project if he wins (given his bid) times the
+probability that he wins.
+
+\[
+EU(\tilde{\alpha}, {\gamma_i}, s_{i}(\tilde{\alpha})) = \text{E}[u(\pi(\tilde{\alpha}, {\gamma_i}, s_{i}(\tilde{\alpha})) \text{ | win}] \times \text{Pr(win | } s_{i}(\tilde{\alpha}) \text{ )}
+\]
+
+Let's break this down. Suppose that bidder \(i\) drew a value
+\(\alpha_i\) and bid according to the score function that we are trying
+to define, knowing that bidder \(j\) drew some other (unown to \(i\))
+value \(\alpha_j\) from the same IID distribution (e.g.~the uniform
+distribution).
+
+The rules of the auction are that the bidder with the \textbf{lowest}
+score wins the auction. Thus, we can write 
+
+\begin{align*}
+\text{Pr(win | } s_i(\tilde{\alpha}) \text{ )} & = \text{Pr(} s_i(\tilde{\alpha}) < \text{ the other bidder's score)} \\ 
+%
+& = \text{Pr(} s_i(\tilde{\alpha}) < s_j(\alpha_j)\text{ )} \\
+%
+& = \text{Pr(} s_j^{-1}(s_i(\tilde{\alpha})) < \alpha_j\text{ )} \\
+%
+& = 1 - F(s_j^{-1}(s_i(\tilde{\alpha})))
+\end{align*}
+
+where
+\(F(a) = \frac{a - \underline{\alpha}}{ \overline{\alpha} - \underline{\alpha}}\)
+is the CDF of the unifrom distribution.
+
+In words --- we're assuming the bidders draw their values \(\alpha_i\)
+and \(\alpha_j\) IID from the uniform distribution with cdf \(F(a)\).
+Each bidder sees his own \(\alpha\), and knows the bidding functions
+\(s_{i}(\cdot)\) and \(s_{j}(\cdot)\), but not the realization of his
+opponent's \(\alpha\). The probability that bidder \(i\) will win if he
+uses his bidding function \(s_{i}(\alpha_i)\) --- like he's supposed to,
+for this to be an equilibirum --- is the probability that
+\(s_{i}(\alpha_i)\) is smaller than \(s_{j}(\cdot)\) evaluted at the
+(unknown to \(i\)) realization of \(\alpha_j\).
+
+So (plugging in) for a proposed score functions \(s_{i}(\cdot)\) and
+\(s_{j}(\cdot)\), the expected utility of participation for bidder \(i\)
+can be written:
+
+\[
+EU(\tilde{\alpha}, {\gamma_i}, s_{i}(\tilde{\alpha})) = \text{E}[u(\pi(\tilde{\alpha}, {\gamma_i}, s_{i}(\tilde{\alpha}))) \text{ | win}] \times  [1 - F(s_{j}^{-1}(s_{i}(\tilde{\alpha}))) ]
+\]
+
+Now the second part -- the expected utility of profits conditional on
+winning. The math for this is the same as in the simpler case detailed
+in the paper, so I won't replicate it here --- instead I'll present the
+formula and explain how it relates to the overall problem.
+
+\[
+ \text{E}[u(\pi(\tilde{\alpha}, {\gamma_i}, s_{i}(\tilde{\alpha}))) \text{ | win}]  = \left(1-\exp \left(-{\gamma_i}  \sum_{t=1}^{T} q_{t}^{b}\left(b_{t}^{*}(s_{i}(\tilde{\alpha}))-\tilde{\alpha} c_{t}\right)-\frac{{\gamma_i} \sigma_{t}^{2}}{2}\left(b_{t}^{*}(s_{i}(\tilde{\alpha}))-\tilde{\alpha} c_{t}\right)^{2}\right)\right)
+\]
+
+This formula includes a new object: the unit bid
+\(b_{t}^{*}(s_{i}(\tilde{\alpha}))\). What is this?
+
+Although only the score determines who wins the auction, in reality,
+bidders don't actually submit ``scores'' directly -- instead they submit
+a unit bid \(b_t\) for each item \(t\) in the procurement project. The
+``score'' for a bidder submitting the vector \(\{b_1,\ldots, b_T\}\) of
+bids, is then computed by multiplying by the DOT's estimate of the
+quantity of each item that will be needed and summing: \[
+\text{score} = \sum\limits_t b_t q_t^e.
+\]
+
+But a result from the paper is that we don't have to think too hard
+about how to choose the unit bids in equilibrium --- it is sufficient to
+solve for an equilibrium \textbf{score} function as we've discussed
+before, under the assumption that for any score (and \(\tilde{\alpha}\)
+and \({\gamma_i})\) type), bidders will deterministically choose the
+unit bids \(b_{t}^{*}(s_{i}(\tilde{\alpha}))\) to maximize
+\(\text{E}[u(\pi(\tilde{\alpha}, {\gamma_i}, s_{i}(\tilde{\alpha}))) \text{ | win}]\).
+
+That is: \[
+\begin{array}{l}
+b_{t}^{*}(s_{i}(\tilde{\alpha})) = \arg\max\limits _{\{ b_t \}} \left[1-\exp \left(-{\gamma_i} \sum_{t=1}^{T} q_{t}^{b}\left(b_{t}-\tilde{\alpha} c_{t}\right)-\frac{{\gamma_i} \sigma_{t}^{2}}{2}\left(b_{t}-\tilde{\alpha} c_{t}\right)^{2}\right)\right] \\ \\ \qquad \qquad \qquad \qquad \qquad \begin{aligned} \text { s.t. } \sum_{t=1}^{T} b_{t} q_{t}^{e}= s_{i}(\tilde{\alpha}) \end{aligned}
+\\ \\ \qquad \qquad \qquad \qquad \qquad \begin{aligned} \text { and   }  b_{t} \geq 0 \text{ for each } t\end{aligned}
+\end{array}
+\]
+
+\textbf{Note:} this really this should be
+\(b_{t}^{*}(\tilde{\alpha},{\gamma_i}, s_{i}(\tilde{\alpha}) )\) but I'm
+suppressing the other parameters since they're implied.
+
+The optimization program above can be rewritten as a fairly standard
+constrained quadratic program:
+
+\[
+\begin{array}{l}
+b_{t}^{*}(s_{i}(\tilde{\alpha})) = \arg\max\limits _{\{ b_t \}} \left[\sum_{t=1}^{T} \underbrace{q_{t}^{b}\left(b_{t}-\tilde{\alpha} c_{t}\right)}_{\text {Expectation of Profits }} \underbrace{-\frac{{\gamma_i} \sigma_{t}^{2}}{2}\left(b_{t}^{i}-\tilde{\alpha}c_{t}\right)^{2}}_{\text {Variance of Profits }}\right] \\ \\ \qquad \qquad \qquad \qquad \qquad \begin{aligned} \text { s.t. } \sum_{t=1}^{T} b_{t} q_{t}^{e}= s_{i}(\tilde{\alpha}) \end{aligned}
+\\ \\ \qquad \qquad \qquad \qquad \qquad \begin{aligned} \text { and   }  b_{t} \geq 0 \text{ for each } t\end{aligned}
+\end{array}
+\]
+
+We need a numerical solver to solve this in general because there is no
+closed form way to know which non-negativity constraints will bind
+(e.g.~which bids will be 0 at the optimum.) However, once we solve this,
+we know that the solution for any non-zero bid will follow:
+
+\[ b_{t}^{*}(s_{i}(\tilde{\alpha})) = \tilde{\alpha} \cdot c_{t}+ \frac{1}{{\gamma_i}} \cdot \frac{q_{t}^{b}}{\sigma_{t}^{2}}+\frac{q_{t}^{e}}{\sigma_{t}^{2} \sum\limits_{p: b_{p}^{*}>0}\left[\frac{\left(q_{p}^{e}\right)^{2}}{\sigma_{p}^{2}}\right]}\left(s-\sum\limits_{p: b_{p}^{*}>0}\left[\tilde{\alpha} \cdot c_{p}^{o} q_{p}^{e}+\frac{1}{{\gamma_i}}\cdot\frac{q_{p}^{b}}{\sigma_{p}^{2}} q_{p}^{e}\right]\right)
+\]
+
+If all of the item bids are above 0 at the optimum, then the summations
+in the formula above are over all items \(t = 1, \ldots, T\). Otherwise,
+the summations are over the items that have unit bids above 0 at the
+optimum.
+
+We can find the partial derivative with respect to \(s\),
+\(\frac{\partial b_t(s)}{\partial s}\), from this equation: \[
+\frac{\partial b_t(\tilde{s})}{\partial s} = \frac{q_{t}^{e}}{\sigma_{t}^{2} \sum\limits_{p: b_{p}^{*}>0}\left[\frac{\left(q_{p}^{e}\right)^{2}}{\sigma_{p}^{2}}\right]} \quad \text{   if   } \quad b_t(\tilde{s}) > 0
+\] and \(\frac{\partial b_t(\tilde{s})}{\partial s} = 0\) if
+\(b_t(\tilde{s}) = 0\).
+
+Going back to the expected utility for participating in an auction,
+let's go back to a more high level expression:
+
+\[
+EU(\tilde{\alpha}, {\gamma_i}, s_{i}(\tilde{\alpha})) = \underbrace{\text{E}[u(\pi(\tilde{\alpha}, {\gamma_i}, s_{i}(\tilde{\alpha}))) \text{ | win}] }_{\text{Value of winning}} \times \underbrace{[1 - F(s_{j}^{-1}(s_{i}(\tilde{\alpha}))) ]}_{\text{Probability of winning}} 
+\] and to simplify notation, let's write this as: \[
+EU(\tilde{\alpha}, {\gamma_i}, s_{i}(\tilde{\alpha})) \equiv V(s_{i}(\tilde{\alpha})) \times [1 - F(s_{j}^{-1}(s_{i}(\tilde{\alpha}))) ].
+\]
+
+We would like to find the function \(s_{i}(\alpha)\) such that bidder
+\(i\) will be maximally happy with his bid \(s_{i}({\alpha_i})\) no
+matter what draw of \(\alpha_i\) he gets --- meaning that he could not
+profit by bidding a different score if his opponent is using
+\(s_{j}(\alpha)\) to detrmine \emph{her} bid.
+
+A quick inspection of the
+\(EU(\tilde{\alpha}, {\gamma_i}, s_{i}(\tilde{\alpha}))\) function shows
+that it is in fact concave in \(s\) (as a value), and so a sufficient
+condition for the optimality of \(s(\cdot, \cdot)\) is that the first
+order condition of \(EU(\cdot)\) holds:
+
+\[
+\frac{\partial EU(\tilde{\alpha}, {\gamma}_i, s_{i}(\tilde{\alpha}))}{\partial \tilde{s}} = 0.
+\]
+
+This first order condition is what will define the differential equaiton
+that we need to solve in order to find a function \(s(\cdot, \cdot)\)
+that will satisfy the conditions to be an ``equilibrium''.
+
+Taking the derivative from our expression above: 
+\begin{equation}\label{foc}
+\frac{\partial EU(\tilde{\alpha}, {\gamma}_i, s_{i}(\tilde{\alpha}))}{\partial \tilde{s}}  =  
+\frac{\partial}{\partial \tilde{s}}V(s_{i}(\tilde{\alpha}))  \times [1 - F(s_{j}^{-1}(s_{i}(\tilde{\alpha}))) ] + V(s_{i}(\tilde{\alpha})) \times \frac{\partial}{\partial \tilde{s}}[1 - F(s_{j}^{-1}(s_{i}(\tilde{\alpha}))) ]
+\\
+= 0.
+\end{equation}
+
+Note that we can compute
+\(\frac{\partial}{\partial \tilde{s}}V(s_{i}(\tilde{\alpha}))\) fairly
+easily -- this is exactly the same as in the one dimensional type case:
+
+Let's simplify notation one more time and write: \[
+CE(s_{i}(\tilde{\alpha})) = \sum_{t=1}^{T} q_{t}^{b}\left(b_{t}^{*}(s_{i}(\tilde{\alpha}))-\tilde{\alpha} c_{t}\right)-\frac{{\gamma_i} \sigma_{t}^{2}}{2}\left(b_{t}^{*}(s_{i}(\tilde{\alpha}))-\tilde{\alpha} c_{t}\right)^{2}
+\]
+
+so that
+
+\[
+V(s_{i}(\tilde{\alpha}))  = 1 - \exp[-{\gamma_i}CE(s_{i}(\tilde{\alpha}))]
+\]
+
+\[
+\frac{\partial}{\partial \tilde{s}}V(s_{i}(\tilde{\alpha}))= {\gamma_i} \frac{\partial}{\partial \tilde{s}} CE(s_{i}(\tilde{\alpha}))) \times \exp[-{\gamma_i}CE(s_{i}(\tilde{\alpha}))],
+\] where \[
+\frac{\partial}{\partial \tilde{s}} CE(s_{i}(\tilde{\alpha})) = \sum_{t=1}^{T} \left[\frac{\partial b_t^{*}(s_{i}(\tilde{\alpha}))}{\partial \tilde{s}} \large\left(q_t^{b} - {\gamma_i} \sigma^{2}(b_t^{*}(s_{i}(\tilde{\alpha},))- \tilde{\alpha} c_t) \large\right)\right].
+\]
+
+As noted before, we solve for \(b_t^{*}(s_{i}(\tilde{\alpha}))\) and
+\(\frac{\partial b_t^{*}(s_{i}(\tilde{\alpha}))}{\partial s}\)
+numerically, and so
+\(\frac{\partial}{\partial \tilde{s}} CE( s_{i}(\tilde{\alpha})))\) and
+consequently
+\(\frac{\partial}{\partial \tilde{s}}V(s_{i}(\tilde{\alpha}))\) are well
+defined and computable for any function \(s_{i}(\cdot)\).
+
+Now we can also take the derivative of the second part directly --- but
+it will be a function of \(s_{j}^{-1}(\tilde{s})\):
+
+\[
+\frac{\partial}{\partial \tilde{s}}[1 - F(s_{j}^{-1}(s_{i}(\tilde{\alpha}))) ] =  [-f(s_{j}^{-1}(s_{i}(\tilde{\alpha})))] \times \frac{\partial s_{j}^{-1}(s_{i}(\tilde{\alpha}))}{\partial \tilde{s}}
+\]
+
+\hypertarget{defining-the-inverse-function-and-writing-down-the-ode-sytem}{%
+\subsubsection{Defining the inverse function and writing down the ODE
+sytem}\label{defining-the-inverse-function-and-writing-down-the-ode-sytem}}
+
+For convenience, we will write the inverse functions \[
+\varphi_j(\tilde{s}) \equiv s_{j}^{-1}(\tilde{s}) \text{  and  } \varphi_i(\tilde{s}) \equiv s_{i}^{-1}(\tilde{s}) 
+\]
+
+Equilibrium bidding funcitons will alwyas be monotonic (at least for
+this class of problems) and so there is a 1:1 relationship between
+\(s_{i}(\tilde{\alpha})\) and its inverse \(\varphi_i(\tilde{s})\): \[
+\varphi_i(s_{i}(\tilde{\alpha})) = \alpha \text{  and  } s_{i}(\varphi_i(\tilde{s})) = \tilde{s}.
+\]
+
+We can thus rewrite the first order condition from Equation (\ref{foc}):
+ \[
+\frac{\partial EU(\tilde{\alpha}, {\gamma}_i, s_{i}(\tilde{\alpha}))}{\partial \tilde{s}}  =  
+\frac{\partial}{\partial \tilde{s}}V(s_{i}(\tilde{\alpha}))  \times [1 - F(\varphi_j(s_{i}(\tilde{\alpha}))) ] + V(s_{i}(\tilde{\alpha})) \times [-f(\varphi_j(s_{i}(\tilde{\alpha})))] \times \frac{\partial \varphi_j(s_{i}(\tilde{\alpha}))}{\partial \tilde{s}}
+= 0.
+\]
+
+Or equivalently, for each possible \(s_{i}\) and \(s_{j}\):
+
+\[
+ \frac{\partial \varphi_j(s_{i})}{\partial \tilde{s}} = \frac{1 - F(\varphi_j(s_{i})) }{f(\varphi_j(s_{i}))} \times \frac{\frac{\partial}{\partial \tilde{s}}V(s_{i})}{V(s_{i})}
+\]
+
+and by symmetry:
+
+\[
+ \frac{\partial \varphi_i(s_{j})}{\partial \tilde{s}} = \frac{1 - F(\varphi_i(s_{j})) }{f(\varphi_i(s_{j}))} \times \frac{\frac{\partial}{\partial \tilde{s}}V(s_{j})}{V(s_{j})}
+\]
+
+This fully defines the system of ODE problem up to a few boundary conditions:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  The ODEs for \(i\) and \(j\) have to be solved together
+\item
+  Both boundary scores have to be the same:
+\end{enumerate}
+
+\[
+\varphi_i(\overline{S}) = \varphi_j(\overline{S}) = \overline{\alpha} \text{ and } \varphi_i(\underline{S}) = \varphi_j(\underline{S}) = \underline{\alpha}
+\] or equivalently: \[ 
+\overline{S} = s_{i}(\overline{\alpha}) = s_{j}(\overline{\alpha}) \text{  and  } \underline{S} = s_{i}(\underline{\alpha}) = s_{j}(\underline{\alpha})
+\] 3. There is a known initial condition that (supposing that
+\(\gamma_j < \gamma_i\)):
+
+\[\overline{S} = s_{i}(\overline{\alpha})\]
+
+must be the smallest value of \(s\) s.t.
+\(V(s , \overline{\alpha}, \gamma_i) = 0\)
+
+\textbf{Note}: I have to double check the condition for \(\overline{S}\)
+above, in (3) is truly correct.
+
+\end{document}
