@@ -26,6 +26,7 @@ function quadprog_exactSolve(a,b,q, s, detail = false)
     sorted_b = [sorted_bids[i].b for i=1:num_bids]
     sorted_q = [sorted_bids[i].q for i=1:num_bids]
     min_sorted_a_over_q = [-sorted_bids[i].a_over_q for i=1:num_bids]
+#     min_sorted_a_over_q_nxt = map(_->zero(float(s)), sorted_a)
     min_sorted_a_over_q_nxt = map(x->zero(float(x)), sorted_a)
 #     @show min_sorted_a_over_q_nxt = [0.0 for i = 1:num_bids]
     
@@ -107,10 +108,14 @@ function quadprog_exactSolve(a,b,q, s, detail = false)
     if duals_opt[1] >= corners_opt[1]
         opt_val = duals_opt[1]
         x_star_sorted = duals_opt[2]
+    elseif s <= 0
+#         x_star_sorted = map(x->zero(float(eltype(s))), 1:num_bids)
+        x_star_sorted = map(_->zero(float(s)), sorted_a)
     else
         opt_val = corners_opt[1]
         opt_i = corners_opt[2]
-        x_star_sorted = map(x->zero(float(x)), sorted_a)
+        x_star_sorted = map(_->zero(float(s)), sorted_a)
+#         x_star_sorted = map(x->zero(float(eltype(s))), 1:num_bids)
         x_star_sorted[opt_i] = (s / sorted_q[opt_i])
     end
     x_star_orig_order = copy(x_star_sorted)
